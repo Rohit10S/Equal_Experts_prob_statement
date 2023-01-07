@@ -5,7 +5,7 @@ resource "aws_key_pair" "terra-key" {
 
 resource "aws_instance" "terrainst" {
   ami                    = var.AMIS[var.REGION]
-  instance_type          = "t3.micro"
+  instance_type          = "t3.medium"
   subnet_id              = aws_subnet.dove-pub-1.id
   key_name               = aws_key_pair.terra-key.key_name
   vpc_security_group_ids = [aws_security_group.dove.id]
@@ -40,14 +40,10 @@ resource "aws_instance" "dockinst" {
 
   user_data = <<-EOF
 #!/bin/bash
-sudo yum update -y
-sudo -i
-yum install java -y
-wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.70/bin/apache-tomcat-9.0.70.tar.gz
-tar -xzvf apache-tomcat-9.0.70.tar.gz
-cd apache-tomcat-9.0.70/
-cd bin
-./startup.sh
+sudo yum update –y
+sudo yum install -y docker
+sudo service docker start
+sudo chkconfig docker on
 EOF
 }
 
