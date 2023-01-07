@@ -51,10 +51,33 @@ resource "aws_route_table" "dove-pub-RT" {
 }
 
 
+
+resource "aws_route_table" "dove-pvt-RT" {
+  vpc_id = aws_vpc.dove.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = "aws_nat_gateway.nat.id"
+  }
+
+  tags = {
+    Name = "dove-pub-RT"
+  }
+}
+
+
+
 resource "aws_route_table_association" "dove-pub-1-a" {
   subnet_id      = aws_subnet.dove-pub-1.id
   route_table_id = aws_route_table.dove-pub-RT.id
 }
+
+#private subnet
+#resource "aws_route_table_association" "dove-pvt-1-a" {
+ # subnet_id      = aws_subnet.dove-priv-1.id
+ # route_table_id = aws_route_table.dove-dove-pvt-RT.id
+#}
+
 
 
 # Create the NAT Gateway
